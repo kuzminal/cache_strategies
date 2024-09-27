@@ -14,7 +14,7 @@ type LRU struct {
 }
 
 func (L *LRU) Add(key, value string) bool {
-	if element, exists := L.items[key]; exists == true {
+	if element, exists := L.items[key]; exists {
 		L.queue.MoveToFront(element)
 		return false
 	}
@@ -40,17 +40,19 @@ func (L *LRU) Get(key string) (value string, ok bool) {
 		return "", false
 	}
 	L.queue.MoveToFront(element)
-	return element.Value.(*Item).Value, true
+	if val, ok := element.Value.(*Item); ok {
+		return val.Value, true
+	}
+	return "", false
 }
 
 func (L *LRU) Remove(key string) (ok bool) {
 	element, exists := L.items[key]
-	if exists {
-		L.queue.Remove(element)
-		return true
-	} else {
+	if !exists {
 		return false
 	}
+	L.queue.Remove(element)
+	return true
 }
 
 func (L *LRU) removeLastElement() {
