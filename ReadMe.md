@@ -1,8 +1,8 @@
-# Cache Strategies Implementation
+# Реализация алгоритмов кэширования
 
-This project implements two popular caching algorithms in Go: LRU (Least Recently Used) and LFU (Least Frequently Used).
+В этом проекте реализованы два популярных алгоритма кэширования на языке Go: LRU (Least Recently Used) и LFU (Least Frequently Used).
 
-## Project Structure
+## Структура проекта
 
 ```
 ├── cmd/
@@ -22,41 +22,41 @@ This project implements two popular caching algorithms in Go: LRU (Least Recentl
 └── README.md
 ```
 
-## Implemented Caching Algorithms
+## Реализованные алгоритмы кэширования
 
-### LRU Cache (Least Recently Used)
+### LRU Кэш (Least Recently Used)
 
-The LRU cache removes the least recently used items first when the cache reaches its capacity. This implementation uses:
+Кэш LRU удаляет наименее недавно использованные элементы при достижении максимального объема кэша. Данная реализация использует:
 
-- `container/list` for maintaining the order of usage
-- `map[interface{}]*list.Element` for O(1) lookups
-- A doubly-linked list to track the access order
+- `container/list` для поддержания порядка использования
+- `map[interface{}]*list.Element` для поиска за O(1)
+- Двусвязный список для отслеживания порядка доступа
 
-Key features:
-- O(1) time complexity for Get and Add operations
-- Automatic eviction of least recently used items
-- Thread-unsafe implementation (intended for single-threaded use)
+Основные особенности:
+- O(1) по времени для операций Get и Add
+- Автоматическое удаление наименее часто используемых элементов
+- Реализация без поддержки многопоточности (предназначена для однопоточного использования)
 
-### LFU Cache (Least Frequently Used)
+### LFU Кэш (Least Frequently Used)
 
-The LFU cache removes the least frequently used items first. This implementation uses a more complex data structure:
+Кэш LFU удаляет наименее часто используемые элементы. Данная реализация использует более сложную структуру данных:
 
-- Multiple frequency lists organized by access count
-- A main list of frequency nodes sorted by frequency
-- Hash maps for O(1) lookups
-- LRU behavior within the same frequency level
+- Множество списков частот, организованных по количеству обращений
+- Основной список узлов частот, отсортированный по частоте
+- Хеш-таблицы для поиска за O(1)
+- Поведение LRU в пределах одного уровня частоты
 
-Key features:
-- O(1) average time complexity for Get and Put operations
-- Handles frequency increments efficiently
-- Maintains LRU order among items with the same frequency
-- Automatic eviction of least frequently used items
+Основные особенности:
+- Средняя сложность O(1) для операций Get и Put
+- Эффективная обработка увеличения частоты
+- Поддержание порядка LRU среди элементов с одинаковой частотой
+- Автоматическое удаление наименее часто используемых элементов
 
-## Usage
+## Использование
 
-### Running the Example
+### Запуск примера
 
-The main application in `cmd/app/main.go` demonstrates the LRU cache usage:
+Основное приложение в файле `cmd/app/main.go` демонстрирует использование кэша LRU:
 
 ```go
 func main() {
@@ -69,45 +69,45 @@ func main() {
 }
 ```
 
-### Using the Caches
+### Использование кэшей
 
 ```go
-// Create LRU cache with capacity 100
+// Создание кэша LRU с максимальным размером 100
 lruCache := lru.NewLRUCache(100)
 
-// Create LFU cache with capacity 100
+// Создание кэша LFU с максимальным размером 100
 lfuCache := lfu.NewLFUCache(100)
 
-// Basic operations
+// Базовые операции
 lruCache.Add("key", "value")
 value, exists := lruCache.Get("key")
 removed := lruCache.Remove("key")
 ```
 
-## Dependencies
+## Зависимости
 
 - Go 1.18+
-- `github.com/stretchr/testify` - for assertion testing
+- `github.com/stretchr/testify` - для тестирования с утверждениями
 
-## Testing
+## Тестирование
 
-The project includes unit tests for both cache implementations in their respective directories. Run tests with:
+Проект включает модульные тесты для обоих алгоритмов кэширования в соответствующих каталогах. Запустите тесты с помощью команды:
 
 ```bash
-go test ./...
+  go test ./...
 ```
 
-## Design Considerations
+## Особенности проектирования
 
-1. **Interface-based design**: The cache package defines a common interface for different cache strategies
-2. **Memory efficiency**: Uses maps and linked lists for optimal memory usage
-3. **Performance**: All core operations are designed to be O(1) time complexity
-4. **Extensibility**: Easy to add new cache strategies by implementing the Cache interface
+1. **Проектирование на основе интерфейсов**: Пакет cache определяет общий интерфейс для различных стратегий кэширования
+2. **Эффективность использования памяти**: Используются хеш-таблицы и связные списки для оптимального использования памяти
+3. **Производительность**: Все основные операции спроектированы для выполнения за O(1)
+4. **Расширяемость**: Легко добавлять новые стратегии кэширования путем реализации интерфейса Cache
 
-## Potential Improvements
+## Возможные улучшения
 
-- Add thread-safety with mutexes or RWMutex
-- Implement TTL (Time To Live) support
-- Add metrics collection (hit rate, miss rate)
-- Support for serialization/deserialization
-- Context-aware operations for timeout handling
+- Добавить поддержку многопоточности с использованием мьютексов или RWMutex
+- Реализовать поддержку TTL (время жизни)
+- Добавить сбор метрик (частота попаданий, частота промахов)
+- Поддержка сериализации/десериализации
+- Операции с учетом контекста для обработки тайм-аутов
